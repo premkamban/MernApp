@@ -8,6 +8,4 @@ export const WithHocClass = (WrappedComponent) => {
   );
 };
 
-export const WithHocChildren = (props) => {
-  return <div>{props.children}</div>;
-};
+export const Aux = (props) => props.children;
