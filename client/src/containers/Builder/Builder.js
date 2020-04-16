@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Aux } from "../../components/HOC/WithHoc";
 import Burger from "./Burger";
 import BuildControls from "./BuildControls";
+import Modal from "../Modal/Modal";
+import OrderSummary from "../../components/Order/OrderSummary";
 
 const INCRE_PRICE = {
   salad: 0.4,
@@ -22,9 +24,13 @@ export default class Builder extends Component {
       },
       totalPrice: 4,
       purchaseAble: false,
+      purchasing: false,
     };
     this.addIncredient = this.addIncredient.bind(this);
     this.removeIncredient = this.removeIncredient.bind(this);
+    this.purchaseHandler = this.purchaseHandler.bind(this);
+    this.purchaseCancel = this.purchaseCancel.bind(this);
+    this.purchaseContinuehandler = this.purchaseContinuehandler.bind(this);
   }
 
   updatePurchaseState(incredients) {
@@ -38,6 +44,17 @@ export default class Builder extends Component {
       }, 0);
 
     this.setState({ purchaseAble: sum > 0 });
+  }
+
+  purchaseHandler() {
+    this.setState({ purchasing: true });
+  }
+  purchaseCancel() {
+    this.setState({ purchasing: false });
+  }
+
+  purchaseContinuehandler() {
+    alert("You continue!!");
   }
 
   addIncredient(type) {
@@ -75,12 +92,21 @@ export default class Builder extends Component {
   render() {
     return (
       <Aux>
+        <Modal show={this.state.purchasing} closeModal={this.purchaseCancel}>
+          <OrderSummary
+            Incredients={this.state.incredients}
+            purchaseCancel={this.purchaseCancel}
+            Continuehandler={this.purchaseContinuehandler}
+            price={this.state.totalPrice}
+          />
+        </Modal>
         <Burger incredients={this.state.incredients} />
         <BuildControls
           incrRemove={this.removeIncredient}
           incredientsAdded={this.addIncredient}
           price={this.state.totalPrice}
           purchaseAble={this.state.purchaseAble}
+          ordered={this.purchaseHandler}
         />
       </Aux>
     );
